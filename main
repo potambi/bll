@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+    <meta charset="UTF-8">
+
+    <title>Chatbot</title>
+
+    <style>
+
+      #chatbox {
+
+        height: 400px;
+
+        overflow-y: scroll;
+
+      } 
+
+      .message-container {
+
+        display: flex;
+
+        margin-bottom: 10px;
+
+      } 
+
+      .user-message {
+
+        background-color: #EEE;
+
+        border-radius: 5px;
+
+        padding: 5px 10px;
+
+        margin-right: 10px;
+
+      } 
+
+      .bot-message {
+
+        background-color: #DDD;
+
+        border-radius: 5px;
+
+        padding: 5px 10px;
+
+        margin-left: 10px;
+
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <div id="chatbox"></div>
+
+    <form id="chat-form">
+
+      <input type="text" id="user-input">
+
+      <button type="submit">Send</button>
+
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/@openai/chat-api@0.5.0/build/chat-api.js"></script>
+
+    <script>
+
+      const chatbox = document.getElementById('chatbox');
+
+      const userInput = document.getElementById('user-input');
+
+      const chatForm = document.getElementById('chat-form'); 
+
+      const chatApi = new window.ChatApi({
+
+        key: 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
+
+      }); 
+
+      async function sendMessage(event) {
+
+        event.preventDefault(); 
+
+        const userInputValue = userInput.value.trim();
+
+        if (userInputValue === '') {
+
+          return;
+
+        } 
+
+        const messageContainer = document.createElement('div');
+
+        messageContainer.classList.add('message-container'); 
+
+        const userMessage = document.createElement('div');
+
+        userMessage.classList.add('user-message');
+
+        userMessage.textContent = userInputValue;
+
+        messageContainer.appendChild(userMessage); 
+
+        chatbox.appendChild(messageContainer);
+
+        userInput.value = ''; 
+
+        try {
+
+          const response = await chatApi.sendMessage(userInputValue);
+
+          const botMessage = document.createElement('div');
+
+          botMessage.classList.add('bot-message');
+
+          botMessage.textContent = response.text;
+
+          messageContainer.appendChild(botMessage);
+
+        } catch (error) {
+
+          console.error(error);
+
+        }
+
+      } 
+
+      chatForm.addEventListener('submit', sendMessage);
+
+    </script>
+
+  </body>
+
+</html>
+
